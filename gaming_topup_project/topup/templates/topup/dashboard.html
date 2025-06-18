@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - Gaming Top-Up</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f0f4f8;
+        color: #333;
+      }
+
+      .dashboard-container {
+        max-width: 900px;
+        margin: auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #1976d2;
+      }
+
+      h2 {
+        color: #444;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 0.4rem;
+        margin-top: 2rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      li {
+        padding: 10px;
+        margin: 8px 0;
+        background-color: #f9f9f9;
+        border-left: 5px solid #1976d2;
+        border-radius: 5px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.05);
+        transition: background-color 0.3s ease;
+      }
+
+      li:hover {
+        background-color: #e3f2fd;
+      }
+
+      .stats-box {
+        background: #e8f5e9;
+        border-left: 5px solid #43a047;
+        padding: 1rem;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .footer {
+        margin-top: 3rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h1>Admin Dashboard</h1>
+
+      <h2>Top 5 Most Purchased Products</h2>
+      <ul>
+        {% for product in top_products %}
+        <li>
+          {{ product.name }} —
+          <strong>{{ product.total_orders }}</strong> orders
+        </li>
+        {% empty %}
+        <li>No data available.</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Daily Revenue (Last 7 Days)</h2>
+      <ul>
+        {% for entry in daily_revenue %}
+        <li>{{ entry.date }} — ₹{{ entry.total }}</li>
+        {% empty %}
+        <li>No revenue data available.</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Failed Payments (This Month)</h2>
+      <div class="stats-box">Total Failed Payments: {{ failed_count }}</div>
+
+      <div class="footer">
+        &copy; {{ now|date:"Y" }} Gaming Top-Up Dashboard
+      </div>
+    </div>
+  </body>
+</html>

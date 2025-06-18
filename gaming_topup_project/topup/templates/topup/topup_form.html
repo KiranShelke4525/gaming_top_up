@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gaming Top-Up Form</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+        }
+        input, select {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            background-color: #1976d2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Gaming Top-Up Form</h2>
+<form id="topupForm">
+    <input type="text" name="gamename" placeholder="Game Name" required>
+    <input type="text" name="game_id" placeholder="Game ID" required>
+    <input type="text" name="product_name" placeholder="Product Name" required>
+    <input type="number" name="product_id" placeholder="Product ID" required>
+    <input type="number" name="product_price" step="0.01" placeholder="Product Price" required>
+    <input type="email" name="user_email" placeholder="User Email" required>
+    <select name="payment_status" required>
+        <option value="">Select Payment Status</option>
+        <option value="pending">Pending</option>
+        <option value="success">Success</option>
+        <option value="failed">Failed</option>
+    </select>
+    <button type="submit">Submit</button>
+</form>
+
+<div id="response"></div>
+
+<script>
+document.getElementById('topupForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+        gamename: form.gamename.value,
+        game_id: form.game_id.value,
+        product_name: form.product_name.value,
+        product_id: parseInt(form.product_id.value),
+        product_price: parseFloat(form.product_price.value),
+        user_email: form.user_email.value,
+        payment_status: form.payment_status.value,
+    };
+
+    const responseDiv = document.getElementById('response');
+
+    try {
+        const res = await fetch('/api/topup/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        responseDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+    } catch (error) {
+        responseDiv.innerHTML = `<p style="color: red;">Failed to submit: ${error.message}</p>`;
+    }
+});
+
+function getCSRFToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [key, value] = cookie.trim().split('=');
+        if (key === name) return value;
+    }
+    return '';
+}
+</script>
+
+</body>
+</html>
